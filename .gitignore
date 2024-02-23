@@ -1,5 +1,14 @@
+# IDE
 .idea/
 
+# macOS
 .DS_Store
+
+# Binaries
 *.zip
 bootstrap
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
