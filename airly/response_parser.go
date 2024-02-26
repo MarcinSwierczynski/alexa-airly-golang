@@ -2,9 +2,7 @@ package airly
 
 import (
 	"encoding/json"
-	"io"
 	"log"
-	"net/http"
 )
 
 type response struct {
@@ -26,12 +24,7 @@ type standard struct {
 	Percent   float32 `json:"percent"`
 }
 
-func parseJsonResponse(resp *http.Response) response {
-	data, err := io.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln(err)
-	}
-
+func parseJsonResponse(data []byte) response {
 	var response response
 	parsingError := json.Unmarshal(data, &response)
 	if parsingError != nil {

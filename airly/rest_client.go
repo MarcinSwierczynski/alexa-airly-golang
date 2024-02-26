@@ -1,6 +1,7 @@
 package airly
 
 import (
+	"io"
 	"log"
 	"net/http"
 )
@@ -10,7 +11,7 @@ const apiKey = "<api_key>"
 const maxDistanceKm = "1"
 const pm25pollutant = "PM25"
 
-func fetchAirly(latitude, longitude string) *http.Response {
+func fetchAirly(latitude, longitude string) []byte {
 	client := &http.Client{}
 	request, _ := http.NewRequest("GET", endpoint, nil)
 	request.Header.Set("apikey", apiKey)
@@ -25,6 +26,17 @@ func fetchAirly(latitude, longitude string) *http.Response {
 	if err != nil {
 		log.Fatalln(err)
 	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Fatalln(err)
+		}
+	}(response.Body)
 
-	return response
+	data, err := io.ReadAll(response.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return data
 }
